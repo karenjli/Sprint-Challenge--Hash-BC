@@ -1,6 +1,6 @@
 import hashlib
 import requests
-
+import json
 import sys
 
 from uuid import uuid4
@@ -25,7 +25,9 @@ def proof_of_work(last_proof):
     print("Searching for next proof")
     proof = 0
     #  TODO: Your code here
-
+    while valid_proof(last_proof, proof) is False: 
+        proof+=1
+    
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
 
@@ -38,10 +40,16 @@ def valid_proof(last_hash, proof):
 
     IE:  last_hash: ...AE9123456, new hash 123456E88...
     """
-
-    # TODO: Your code here!
-    pass
-
+    # Hash the last proof
+    last = f'{last_hash}'.encode()
+    last_hash_value=hashlib.sha256(last).hexdigest()
+    
+    # Get the proof (which is the guess)
+    guess=f'{proof}'.encode()
+    guess_hash_value=hashlib.sha256(guess).hexdigest()
+    
+    # Return the guess when conditiosn are met
+    return guess_hash_value[-6:] == last_hash_value[:6]
 
 if __name__ == '__main__':
     # What node are we interacting with?
