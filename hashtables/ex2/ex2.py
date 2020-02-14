@@ -18,12 +18,20 @@ def reconstruct_trip(tickets, length):
     hashtable = HashTable(length)
     route = [None] * length
     
-
+    # Add each ticket into hash table
+    for ticket in tickets:
+        hash_table_insert(hashtable, ticket.source, ticket.destination)
+        
+    # Find the first ticket
+    ticket = hash_table_retrieve(hashtable, 'NONE')
     
-ticket_1 = Ticket("NONE", "PDX")
-ticket_2 = Ticket("PDX", "DCA")
-ticket_3 = Ticket("DCA", "NONE")
-
-tickets = [ticket_1, ticket_2, ticket_3]
-
-print(reconstruct_trip(tickets, 3))
+    
+    # Go through each ticket and add it into the route
+    for i in range(length):
+       
+        route[i] = ticket
+        ticket = hash_table_retrieve(hashtable, ticket)
+    
+    # Delete the last "NONE" value
+    route.pop()
+    return route
